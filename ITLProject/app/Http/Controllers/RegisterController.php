@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 
 class RegisterController extends Controller
 {
@@ -21,8 +21,17 @@ class RegisterController extends Controller
                 'email' => 'required|email|max:255',
                 'password' => 'required|min:6|confirmed',
             ]);
-            $user = User::create(request(['name', 'email','password']));
-//        auth()->login($user);
-        return redirect()->to('dashboard');
+            $user = new User();
+            $user->name = $request->get('name');
+            $user->email = $request->get('email');
+            if (User::where('email', '=', $request->get('email'))->exists()) {
+                return back()->withErrors([
+                    'email' => 'Email was existed',
+                ]);
+             }
+//          auth()->login($user);
+             $user->password = Hash::make($request->get('password'));
+             $user->save();
+             return redirect()->to('index');
         }
 }
