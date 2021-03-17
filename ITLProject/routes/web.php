@@ -5,6 +5,7 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Task;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,7 +19,12 @@ use App\Models\Task;
 */
 
 Route::get('/', function () {
-    return view('auth/login');
+    if(Auth::guest()) {
+        return view('auth/login');
+    } else {
+        return back();
+    }
+
 });
 
 // Add Task
@@ -31,7 +37,7 @@ Route::get('index', function () {
 Route::post('task', [TaskController::class, 'store']);
 
 // Delete Task
-Route::delete('task/{task}', [TaskController::class, 'delete']);
+Route::delete('task/{task}', [TaskController::class, 'destroy']);
 
 // Authentication Routes...
 Route::get('login', function () {

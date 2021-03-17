@@ -25,21 +25,34 @@ class TaskController extends Controller
         ]);
     }
 
+    /**
+     * Create a new task.
+     *
+     * @param  Request  $request
+     * @return Response
+     */
     public function store(Request $request)
     {
         $this->validate($request, [
             'name' => 'required|max:255',
         ]);
-
         $task = new Task;
         $task->user_id = $request->user()->id;
         $task->name = $request->name;
-        $task->save(); 
+        $task->save();
         return redirect('index');
     }
 
-    public function delete(Task $task)
+    /**
+     * Destroy the given task.
+     *
+     * @param  Request  $request
+     * @param  Task  $task
+     * @return Response
+     */
+    public function destroy(Request $request, Task $task)
     {
+        $this->authorize('destroy', $task);
         $task->delete();
         return redirect('index');
     }
