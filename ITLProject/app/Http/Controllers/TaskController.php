@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Task;
+use Exception;
 
 class TaskController extends Controller
 {
@@ -33,14 +34,25 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'name' => 'required|max:255',
-        ]);
-        $task = new Task;
-        $task->user_id = $request->user()->id;
-        $task->name = $request->name;
-        $task->save();
-        return redirect('index');
+        try{
+            $this->validate($request, [
+                'name' => 'required|max:255',
+            ]);
+            $task = new Task;
+            $task->user_id = $request->user()->id;
+            $task->name = $request->name;
+            $task->save();
+            return response()->json([
+                'status_code' => 200,
+                'message' => 'success',
+            ]);
+        } catch(Exception $error){
+            return response()->json([
+                'status_code' => 500,
+                'message' => 'Error in Login',
+                'error' => $error,
+            ]);
+        }
     }
 
     /**
@@ -52,8 +64,19 @@ class TaskController extends Controller
      */
     public function destroy(Request $request, Task $task)
     {
-        $this->authorize('destroy', $task);
-        $task->delete();
-        return redirect('index');
+        try{
+            $this->authorize('destroy', $task);
+            $task->delete();
+            return response()->json([
+                'status_code' => 200,
+                'message' => 'success',
+            ]);
+        }catch(Exception $error){
+            return response()->json([
+                'status_code' => 500,
+                'message' => 'Error in Login',
+                'error' => $error,
+            ]);
+        }
     }
 }

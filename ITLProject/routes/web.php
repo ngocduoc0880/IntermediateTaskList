@@ -5,6 +5,7 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Task;
+use GuzzleHttp\Psr7\Request;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -24,7 +25,6 @@ Route::get('/', function () {
     } else {
         return back();
     }
-
 });
 
 // Add Task
@@ -39,7 +39,7 @@ Route::post('task', [TaskController::class, 'store']);
 // Delete Task
 Route::delete('task/{task}', [TaskController::class, 'destroy']);
 
-// Authentication Routes...
+// Login
 Route::get('login', function () {
     return view('auth/login');
 });
@@ -50,3 +50,11 @@ Route::get('register', function () {
     return view('auth/register');
 });
 Route::post('register', [RegisterController::class, 'store']);
+
+// Logout
+Route::get('logout', function(Request $request) {
+    Auth::logout();
+    //  $request->session()->invalidate();
+    //  $request->session()->regenerateToken();
+    return redirect('/');
+});

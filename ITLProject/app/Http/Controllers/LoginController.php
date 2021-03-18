@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\CssSelector\Parser\Token as ParserToken;
+use TheSeer\Tokenizer\Token;
 
 class LoginController extends Controller
 {
@@ -18,11 +20,12 @@ class LoginController extends Controller
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended('index');
+            return response()->json();
+        //return redirect()->intended('index');
         }
-
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ]);
+        return response(200)->json();
+        // return back()->withErrors([
+        //     'email' => 'The provided credentials do not match our records.',
+        // ]);
     }
 }
