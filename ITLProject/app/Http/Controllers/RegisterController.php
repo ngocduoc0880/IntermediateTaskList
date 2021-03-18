@@ -27,7 +27,6 @@ class RegisterController extends Controller
             $user = new User();
             $user->name = $request->get('name');
             $user->email = $request->get('email');
-            $user->remember_token = Str::random(60);
             if (User::where('email', '=', $request->get('email'))->exists()) {
                 return back()->withErrors([
                     'email' => 'Email was existed',

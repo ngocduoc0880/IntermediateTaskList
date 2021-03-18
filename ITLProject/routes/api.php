@@ -21,11 +21,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-//Login
-Route::post('login', [AuthController::class, 'login']);
+
 
 // Group
 Route::middleware(['auth:sanctum'])->group(function () {
+    // Login
+    Route::post('login', [AuthController::class, 'login']);
     // Show List Task
     Route::get('index', [TaskController::class,'index']);
     // Add Task

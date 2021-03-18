@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Task;
-use Exception;
 use App\Repositories\TaskRepository;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
@@ -19,6 +19,13 @@ class TaskController extends Controller
      */
     public function index(Request $request)
     {
+        $user = Auth::guard("api")->user();
+        if (!$user) {
+            return response()->json([
+                'error' => __('messages.missing_access_token'),
+                'message' => __('messages.missing_access_token'),
+            ], 401);
+        }
         $tasks = new TaskRepository;
         return response()->json($tasks->forUser($request->user()));
     }
@@ -46,7 +53,7 @@ class TaskController extends Controller
         } catch(\Exception $error){
             return response()->json([
                 'status_code' => 500,
-                'message' => 'Error',
+                'message' => 'Internal Server Error',
                 'error' => $error,
             ]);
         }
