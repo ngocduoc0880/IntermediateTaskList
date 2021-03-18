@@ -9,22 +9,6 @@ use Exception;
 
 class TaskController extends Controller
 {
-    // /**
-    //  * Create a new controller instance.
-    //  *
-    //  * @return void
-    //  */
-    // public function __construct()
-    // {
-    //     $this->middleware('auth');
-    // }
-
-    public function index(Request $request)
-    {
-        return view('tasks.index', [
-            'tasks' => $this->tasks->forUser($request->user()),
-        ]);
-    }
 
     /**
      * Create a new task.
@@ -46,10 +30,10 @@ class TaskController extends Controller
                 'status_code' => 200,
                 'message' => 'success',
             ]);
-        } catch(Exception $error){
+        } catch(\Exception $error){
             return response()->json([
                 'status_code' => 500,
-                'message' => 'Error in Login',
+                'message' => 'Error',
                 'error' => $error,
             ]);
         }
@@ -62,7 +46,7 @@ class TaskController extends Controller
      * @param  Task  $task
      * @return Response
      */
-    public function destroy(Request $request, Task $task)
+    public function destroy(Task $task)
     {
         try{
             $this->authorize('destroy', $task);
@@ -71,10 +55,10 @@ class TaskController extends Controller
                 'status_code' => 200,
                 'message' => 'success',
             ]);
-        }catch(Exception $error){
+        }catch(\Exception $error){
             return response()->json([
                 'status_code' => 500,
-                'message' => 'Error in Login',
+                'message' => 'Error',
                 'error' => $error,
             ]);
         }
