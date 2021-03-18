@@ -6,9 +6,22 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Task;
 use Exception;
+use App\Repositories\TaskRepository;
 
 class TaskController extends Controller
 {
+
+    /**
+     * Display a list of all of the user's task.
+     *
+     * @param  Request  $request
+     * @return Response
+     */
+    public function index(Request $request)
+    {
+        $tasks = new TaskRepository;
+        return response()->json($tasks->forUser($request->user()));
+    }
 
     /**
      * Create a new task.
@@ -49,7 +62,9 @@ class TaskController extends Controller
     public function destroy(Task $task)
     {
         try{
-            $this->authorize('destroy', $task);
+            if(!$this->authorize('destroy', $task)){
+                throw new \Exception('Unauthorized');
+            }
             $task->delete();
             return response()->json([
                 'status_code' => 200,
