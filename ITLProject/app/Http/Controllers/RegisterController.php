@@ -19,22 +19,27 @@ class RegisterController extends Controller
  */
     protected function store(Request $request)
         {
-            $request->validate([
-                'name' => 'required|max:255',
-                'email' => 'required|email|max:255',
-                'password' => 'required|min:6|confirmed',
-            ]);
-            $user = new User();
-            $user->name = $request->get('name');
-            $user->email = $request->get('email');
-            if (User::where('email', '=', $request->get('email'))->exists()) {
-                return back()->withErrors([
-                    'email' => 'Email was existed',
+    
+                $request->validate([
+                    'name' => 'required|max:255',
+                    'email' => 'required|email|max:255',
+                    'password' => 'required|min:6',
                 ]);
-             }
-             $user->password = Hash::make($request->get('password'));
-             $user->save();
-             Auth::login($user);
-             return redirect()->to('index');
+                $user = new User();
+                $user->name = $request->get('name');
+                $user->email = $request->get('email');
+                if (User::where('email', '=', $request->get('email'))->exists()) {
+                    return response()->json([
+                        'status_code' => 401,
+                        'message' => 'Email was existed',
+                    ]);
+                 }
+                 $user->password = Hash::make($request->get('password'));
+                 $user->save();
+                 Auth::login($user);
+                 return response()->json([
+                    'status_code' => 200,
+                    'message' => 'success',
+                 ]);
         }
 }

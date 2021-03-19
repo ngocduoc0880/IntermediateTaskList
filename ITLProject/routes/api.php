@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Models\Task;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\RegisterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,12 +22,13 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-
-
+// Login
+Route::post('login', [AuthController::class, 'login']);
+// Register
+Route::post('register', [RegisterController::class, 'store']);
 // Group
 Route::middleware(['auth:sanctum'])->group(function () {
-    // Login
-    Route::post('login', [AuthController::class, 'login']);
+
     // Show List Task
     Route::get('index', [TaskController::class,'index']);
     // Add Task

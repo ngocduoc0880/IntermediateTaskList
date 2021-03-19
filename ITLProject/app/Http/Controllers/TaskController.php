@@ -11,6 +11,16 @@ use Illuminate\Support\Facades\Auth;
 class TaskController extends Controller
 {
 
+        /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     /**
      * Display a list of all of the user's task.
      *
@@ -19,13 +29,6 @@ class TaskController extends Controller
      */
     public function index(Request $request)
     {
-        $user = Auth::guard("api")->user();
-        if (!$user) {
-            return response()->json([
-                'error' => __('messages.missing_access_token'),
-                'message' => __('messages.missing_access_token'),
-            ], 401);
-        }
         $tasks = new TaskRepository;
         return response()->json($tasks->forUser($request->user()));
     }
