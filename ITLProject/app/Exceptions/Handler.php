@@ -3,6 +3,9 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\UnauthorizedException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -39,8 +42,18 @@ class Handler extends ExceptionHandler
         });
     }
 
-    // public function render($request, Throwable $e)
-    // {
+    public function render($request, Throwable $e)
+    {
 
-    // }
+        if ($e instanceof UnauthorizedException) {
+            return response()->json([
+                'errors' => 'username or password invalid'
+            ], JsonResponse::HTTP_UNAUTHORIZED);
+        }
+        if ($e instanceof NotFoundHttpException) {
+            return response()->json([
+                'errors' => 'user is not exist'
+            ],JsonResponse::HTTP_NOT_FOUND);
+        }
+    }
 }

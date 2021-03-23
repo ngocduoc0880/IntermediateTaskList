@@ -41,7 +41,6 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        try{
             $this->validate($request, [
                 'name' => 'required|max:255',
             ]);
@@ -53,13 +52,6 @@ class TaskController extends Controller
                 'status_code' => 200,
                 'message' => 'success',
             ]);
-        } catch(\Exception $error){
-            return response()->json([
-                'status_code' => 500,
-                'message' => 'Internal Server Error',
-                'error' => $error,
-            ]);
-        }
     }
 
     /**
